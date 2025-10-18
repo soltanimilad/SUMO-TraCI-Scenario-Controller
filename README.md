@@ -1,81 +1,143 @@
-Automated SUMO-TraCI Scenario Controller
+# 🚦 Automated SUMO–TraCI Scenario Controller
 
-This project provides a robust, command-line interface (CLI) to automate the entire workflow for creating, running, and analyzing traffic simulations using SUMO (Simulation of Urban MObility) and the TraCI (Traffic Control Interface) library.
+A **robust command-line tool** to automate the full workflow of creating, running, and analyzing **traffic simulations** using **SUMO (Simulation of Urban MObility)** and the **TraCI (Traffic Control Interface)** library.
 
-The primary goal is to facilitate disruption analysis by comparing a baseline traffic scenario against a scenario where a major road is dynamically closed (blocked) using TraCI calls.
+This tool is designed to **analyze disruption impacts** by comparing a **baseline traffic scenario** with another scenario where a **major road is dynamically blocked** using TraCI.
 
-🚀 Key Features
+---
 
-Full Pipeline Automation: Automatically handles map download (via BBOX), network conversion (netconvert), trip generation (randomTrips), routing (duarouter), and simulation execution.
+## 🚀 Key Features
 
-Intelligent Edge Suggestion: Uses XML parsing to automatically identify and suggest major road segments (motorway, primary, busway, etc.) that are ideal for disruption testing.
+* **Full Pipeline Automation**
+  Automatically handles every step — map download (via BBOX), network conversion (`netconvert`), trip generation (`randomTrips`), routing (`duarouter`), and simulation execution.
 
-Dynamic Road Blocking: Uses TraCI to block specified lanes at a specific simulation time and for a defined duration.
+* **Intelligent Edge Suggestion**
+  Parses the SUMO network XML file to automatically suggest major road segments (`motorway`, `primary`, `busway`, etc.) suitable for disruption testing.
 
-Performance Comparison: Generates a final report comparing key metrics (Total Travel Time, Average Speed) between the baseline and blocked scenarios.
+* **Dynamic Road Blocking**
+  Uses TraCI to dynamically block specified lanes at a defined simulation time and for a chosen duration.
 
-Cross-Platform Compatibility: Designed to run seamlessly on both Windows and Linux environments.
+* **Performance Comparison**
+  Generates a detailed summary comparing **Total Travel Time**, **Average Speed**, and other metrics between baseline and blocked scenarios.
 
-🛠️ Requirements & Setup
+* **Cross-Platform Compatibility**
+  Works seamlessly on **Windows** and **Linux**.
 
-You must have the following software installed and accessible from your command line:
+---
 
-Python 3.x: Used to run the main controller script.
+## 🛠️ Requirements & Setup
 
-SUMO (Simulation of Urban MObility): The entire SUMO suite (including sumo, netconvert, randomTrips, duarouter, etc.) must be installed and added to your system's PATH.
+### 1. Prerequisites
 
-Dependencies: Install the required Python libraries.
+Make sure the following are installed and accessible from your terminal:
 
+* **Python 3.x** – to run the controller script
+* **SUMO (Simulation of Urban MObility)** – including `sumo`, `netconvert`, `randomTrips`, `duarouter`, etc. (must be added to your system `PATH`)
+
+### 2. Install Dependencies
+
+Install Python dependencies using:
+
+```bash
 pip install -r requirements.txt
-# (Assuming requirements.txt contains: lxml)
+```
 
+> 💡 Make sure `requirements.txt` includes:
+>
+> ```
+> lxml
+> ```
 
-Note: If you are running on Linux, ensure you have the libxml2-dev package installed for robust XML handling, as required by SUMO's tools.
+**Linux users:**
+Ensure the `libxml2-dev` package is installed for robust XML handling — it’s required by SUMO’s tools.
 
-🏁 How to Run the Simulation
+---
 
-The entire workflow is managed by the single executable script, SimulationRunner.py.
+## 🏁 How to Run the Simulation
 
-1. Execute the Script
+The main entry point is the script **`SimulationRunner.py`**.
 
-Run the main file from your terminal:
+### 1. Execute the Script
 
+Run it from your terminal:
+
+```bash
 python3 SimulationRunner.py
+```
 
+### 2. Follow the Interactive Prompts
 
-2. User Input & Configuration
+The script guides you step-by-step through configuration:
 
-The script will guide you through the initial setup:
+| Prompt                   | Description                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Filename Auto-Detect** | If a single `.osm` file exists (e.g., `tehran.osm`), it will be automatically selected.                                                                  |
+| **BBOX Coordinates**     | If no map is found, you’ll be asked to enter boundary coordinates (`min_lat`, `min_lon`, `max_lat`, `max_lon`) to download a new map from OpenStreetMap. |
+| **Simulation Settings**  | Define simulation end time and trip generation parameters.                                                                                               |
 
-Prompt
+---
 
-Description
+## 🚧 Selecting the Edge for Disruption
 
-Filename Auto-Detect
+After the baseline simulation is generated, the tool outputs a list of **suggested edges** for testing:
 
-The script first checks your directory. If it finds a single .osm file (e.g., tehran.osm), it automatically uses that name and skips the BBOX prompts.
+```
+✅ SUGGESTED EDGE IDs FOR TRAFFIC BLOCKING
+(Use the first column)
 
-BBOX Coordinates
-
-If no map is found, enter the latitude/longitude boundaries (min_lat, min_lon, max_lat, max_lon) to download a new map from OpenStreetMap.
-
-Simulation Settings
-
-Enter parameters like total simulation end time and trip generation period.
-
-3. Select Edge for Disruption
-
-After generating the baseline simulation files, the script will output a list of suggested roads for blocking:
-
-✅ SUGGESTED EDGE IDs FOR TRAFFIC BLOCKING (Use the first column)
-
-- 123456789 (Type: highway.primary)
-- 987654321 (Type: highway.busway)
+- 123456789  (Type: highway.primary)
+- 987654321  (Type: highway.busway)
 ...
+```
 
+When prompted, enter:
 
-CRITICAL INPUT: When prompted for the blocking parameters, use the clean Clean Edge ID (e.g., 123456789) and the desired Lane Index (e.g., 0).
+* **Edge ID** → e.g., `123456789`
+* **Lane Index** → e.g., `0`
 
-📊 Output and Analysis
+---
 
-Upon completion, the script will run two simulations (Baseline and Blocked) and generate a summary report comparing the traffic metrics, allowing you to quickly assess the impact of the road closure on the overall network performance.
+## 📊 Output & Analysis
+
+After running both **Baseline** and **Blocked** simulations, a **summary report** is generated containing:
+
+* Total Travel Time
+* Average Speed
+* Network Performance Comparison
+
+This helps quantify the **impact of road closures** on overall traffic efficiency.
+
+---
+
+### 🧭 Example Workflow Overview
+
+```text
+[1] Map Download → [2] Network Conversion → [3] Trip Generation
+       ↓
+[4] Routing → [5] Baseline Simulation → [6] Dynamic Blocking → [7] Report Generation
+```
+
+---
+
+### 🧩 Folder Structure
+
+```
+├── SimulationRunner.py
+├── requirements.txt
+├── /maps
+│   └── tehran.osm
+├── /networks
+├── /trips
+├── /routes
+└── /outputs
+    ├── baseline_summary.xml
+    ├── blocked_summary.xml
+    └── comparison_report.txt
+```
+
+---
+
+### 📘 License
+
+This project is released under the **MIT License** — free for personal and academic use.
+
