@@ -1,0 +1,28 @@
+--- Security Exclusions ---
+
+Ignore the SSH key files we just generated
+
+Sumo_traci
+Sumo_traci.pub
+
+--- Environment and Log Exclusions ---
+
+Python Virtual Environments
+
+venv/
+.env
+
+Compiled Python files
+
+pycache/
+*.pyc
+
+Operating System Files
+
+.DS_Store
+
+SUMO Output/Log files
+
+*.xml
+*.log
+scenario_logs/
