@@ -229,8 +229,7 @@ def creating_required_files(filename: str, bbox: Tuple[str, str, str, str], end_
     # Use --vclass to force a mix of passenger (90%) and emergency (10%)
     if not run_command([
         sys.executable, random_trips_script,
-        "-n", net_file, "-o", trip_file, "-e", end_time, "-p", period, "--validate",
-        "--vclass", "passenger,emergency", "--weights", "9,1"
+        "-n", net_file, "-o", trip_file, "-e", end_time, "-p", period, "--validate"
     ], "randomTrips"):
         return False
 
